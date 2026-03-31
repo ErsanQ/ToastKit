@@ -1,5 +1,8 @@
+import Foundation
+
 #if canImport(UIKit)
 import UIKit
+#endif
 
 // MARK: - ToastPresenter
 
@@ -14,7 +17,9 @@ final class ToastPresenter {
 
     private var queue: [(message: String, style: ToastStyle, config: ToastConfiguration)] = []
     private var isPresenting = false
-    private weak var currentToast: ToastView?
+    #if canImport(UIKit)
+    private weak var currentToast: UIView? // Generic UIView for toast
+    #endif
 
     // MARK: - Enqueue
 
@@ -30,6 +35,8 @@ final class ToastPresenter {
         isPresenting = true
 
         let item = queue.removeFirst()
+        
+        #if os(iOS)
         guard let window = UIApplication.shared
             .connectedScenes
             .compactMap({ $0 as? UIWindowScene })
@@ -82,20 +89,27 @@ final class ToastPresenter {
         }
 
         // Auto dismiss
-        DispatchQueue.main.asyncAfter(deadline: .now() + item.config.duration) { [weak self, weak toast] in
+        let duration = item.config.duration
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration) { [weak self, weak toast] in
             guard let toast, toast.superview != nil else { return }
             self?.dismiss(toast: toast, isTop: isTop)
         }
+        #else
+        // Mock for non-iOS platforms
+        isPresenting = false
+        #endif
     }
 
+    #if canImport(UIKit)
     // MARK: - Dismiss
 
     @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
-        guard let toast = gesture.view as? ToastView else { return }
+        guard let toast = gesture.view else { return }
         dismiss(toast: toast, isTop: true)
     }
 
-    private func dismiss(toast: ToastView, isTop: Bool) {
+    private func dismiss(toast: UIView, isTop: Bool) {
+        #if os(iOS)
         let offset: CGFloat = isTop ? -80 : 80
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
             toast.alpha = 0
@@ -106,6 +120,7 @@ final class ToastPresenter {
                 self?.presentNext()
             }
         }
+        #endif
     }
 
     // MARK: - Dismiss Current
@@ -114,5 +129,7 @@ final class ToastPresenter {
         guard let toast = currentToast else { return }
         dismiss(toast: toast, isTop: true)
     }
+    #else
+    func dismissCurrent() {}
+    #endif
 }
-#endif
