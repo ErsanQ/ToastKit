@@ -1,97 +1,49 @@
-#if canImport(UIKit)
-import UIKit
+import SwiftUI
 
-// MARK: - Toast
-
-/// A clean static API for showing toast notifications anywhere in your app.
+/// A premium, non-intrusive notification component for displaying status messages.
 ///
-/// ## Basic usage
-/// ```swift
-/// Toast.show("Saved successfully")
-/// Toast.show("No internet connection", style: .error)
-/// Toast.show("New message from Alex", style: .info, duration: 4)
-/// ```
+/// `Toast` provides a floating UI element that informs the user about events,
+/// errors, or successes without interrupting their current workflow. It supports
+/// glassmorphism styling and custom animations.
 ///
-/// ## All styles
+/// ## Usage
 /// ```swift
-/// Toast.success("Profile updated")
-/// Toast.error("Upload failed")
-/// Toast.warning("Low storage")
-/// Toast.info("Sync complete")
+/// let toast = Toast(title: "Success", image: "checkmark.circle", style: .success)
+/// ToastPresenter.shared.show(toast)
 /// ```
-///
-/// ## Custom configuration
-/// ```swift
-/// Toast.show(
-///     "Order placed!",
-///     style: .success,
-///     configuration: ToastConfiguration(
-///         duration: 4,
-///         position: .bottom
-///     )
-/// )
-/// ```
-@MainActor
-public enum Toast {
-
-    // MARK: - Primary API
-
-    /// Shows a toast with the given message and style.
+public struct Toast: Identifiable, Sendable {
+    /// A unique identifier for each toast instance.
+    public let id = UUID()
+    /// The localized title of the toast.
+    public let title: String
+    /// An optional secondary description.
+    public let message: String?
+    /// An optional SF Symbol name to display as an icon.
+    public let image: String?
+    /// The visual style of the toast (e.g., `.success`, `.error`).
+    public let style: ToastStyle
+    /// Configuration defining position and duration.
+    public let config: ToastConfiguration
+    
+    /// Creates a new Toast.
     ///
     /// - Parameters:
-    ///   - message: The text displayed in the toast.
-    ///   - style: Visual style. Defaults to `.info`.
-    ///   - configuration: Appearance and behavior settings.
-    public static func show(
-        _ message: String,
+    ///   - title: The primary message.
+    ///   - message: Optional detailed description.
+    ///   - image: Optional SF Symbol name.
+    ///   - style: Visual presentation style.
+    ///   - config: Custom configuration for the toast.
+    public init(
+        title: String,
+        message: String? = nil,
+        image: String? = nil,
         style: ToastStyle = .info,
-        configuration: ToastConfiguration = .default
+        config: ToastConfiguration = .default
     ) {
-        ToastPresenter.shared.enqueue(message: message, style: style, config: configuration)
-    }
-
-    /// Shows a toast with a custom duration.
-    ///
-    /// ```swift
-    /// Toast.show("Welcome back!", style: .success, duration: 3)
-    /// ```
-    public static func show(
-        _ message: String,
-        style: ToastStyle = .info,
-        duration: TimeInterval
-    ) {
-        var config = ToastConfiguration.default
-        config.duration = duration
-        ToastPresenter.shared.enqueue(message: message, style: style, config: config)
-    }
-
-    // MARK: - Convenience
-
-    /// Shows a green success toast.
-    public static func success(_ message: String, duration: TimeInterval = 2.5) {
-        show(message, style: .success, duration: duration)
-    }
-
-    /// Shows a red error toast.
-    public static func error(_ message: String, duration: TimeInterval = 2.5) {
-        show(message, style: .error, duration: duration)
-    }
-
-    /// Shows an orange warning toast.
-    public static func warning(_ message: String, duration: TimeInterval = 2.5) {
-        show(message, style: .warning, duration: duration)
-    }
-
-    /// Shows a blue info toast.
-    public static func info(_ message: String, duration: TimeInterval = 2.5) {
-        show(message, style: .info, duration: duration)
-    }
-
-    // MARK: - Dismiss
-
-    /// Immediately dismisses the currently visible toast.
-    public static func dismiss() {
-        ToastPresenter.shared.dismissCurrent()
+        self.title = title
+        self.message = message
+        self.image = image
+        self.style = style
+        self.config = config
     }
 }
-#endif
