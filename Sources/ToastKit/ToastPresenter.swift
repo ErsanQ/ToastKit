@@ -1,3 +1,4 @@
+#if canImport(SwiftUI)
 import SwiftUI
 
 /// The central manager responsible for coordinating toast presentations.
@@ -38,3 +39,4 @@ public final class ToastPresenter: ObservableObject {
         }
     }
 }
+#endif

@@ -1,5 +1,8 @@
+#if canImport(SwiftUI)
+import SwiftUI
 #if canImport(UIKit)
 import UIKit
+#endif
 
 // MARK: - ToastStyle
 
@@ -27,27 +30,27 @@ public enum ToastStyle: Sendable {
     case warning
 
     /// A custom color combination.
-    case custom(background: UIColor, foreground: UIColor)
+    case custom(background: Color, foreground: Color)
 }
 
 // MARK: - Internal Resolved Colors
 
 extension ToastStyle {
 
-    var backgroundColor: UIColor {
+    var backgroundColor: Color {
         switch self {
-        case .success: return UIColor(red: 0.13, green: 0.70, blue: 0.35, alpha: 1)
-        case .error:   return UIColor(red: 0.95, green: 0.23, blue: 0.19, alpha: 1)
-        case .info:    return UIColor(red: 0.0,  green: 0.48, blue: 1.0,  alpha: 1)
-        case .warning: return UIColor(red: 1.0,  green: 0.58, blue: 0.0,  alpha: 1)
+        case .success: return Color(red: 0.13, green: 0.70, blue: 0.35)
+        case .error:   return Color(red: 0.95, green: 0.23, blue: 0.19)
+        case .info:    return Color(red: 0.0,  green: 0.48, blue: 1.0)
+        case .warning: return Color(red: 1.0,  green: 0.58, blue: 0.0)
         case .custom(let bg, _): return bg
         }
     }
 
-    var foregroundColor: UIColor {
+    var foregroundColor: Color {
         switch self {
         case .custom(_, let fg): return fg
-        default: return .white
+        default: return Color.white
         }
     }
 
@@ -61,4 +64,11 @@ extension ToastStyle {
         }
     }
 }
+
+#if canImport(UIKit)
+extension ToastStyle {
+    var uiBackgroundColor: UIColor { UIColor(backgroundColor) }
+    var uiForegroundColor: UIColor { UIColor(foregroundColor) }
+}
+#endif
 #endif

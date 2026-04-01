@@ -24,7 +24,7 @@ final class ToastView: UIView {
     // MARK: - Setup
 
     private func setup(message: String, style: ToastStyle, configuration: ToastConfiguration) {
-        backgroundColor = style.backgroundColor
+        backgroundColor = style.uiBackgroundColor
         layer.cornerRadius = configuration.cornerRadius
         layer.cornerCurve = .continuous
 
@@ -38,14 +38,14 @@ final class ToastView: UIView {
         if configuration.showIcon {
             let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .semibold)
             iconView.image = UIImage(systemName: style.iconName, withConfiguration: config)
-            iconView.tintColor = style.foregroundColor
+            iconView.tintColor = style.uiForegroundColor
             iconView.contentMode = .scaleAspectFit
             iconView.setContentHuggingPriority(.required, for: .horizontal)
         }
 
         // Label
         messageLabel.text = message
-        messageLabel.textColor = style.foregroundColor
+        messageLabel.textColor = style.uiForegroundColor
         messageLabel.font = .systemFont(ofSize: 14, weight: .semibold)
         messageLabel.numberOfLines = 2
         messageLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)

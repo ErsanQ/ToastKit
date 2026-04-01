@@ -1,3 +1,4 @@
+#if canImport(SwiftUI)
 import SwiftUI
 
 /// Defines where a toast appears on screen and how long it stays visible.
@@ -29,3 +30,4 @@ public struct ToastConfiguration: Sendable {
     /// The standard ErsanQ toast configuration.
     public static let `default` = ToastConfiguration()
 }
+#endif

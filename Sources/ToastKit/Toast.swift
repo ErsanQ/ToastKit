@@ -1,3 +1,4 @@
+#if canImport(SwiftUI)
 import SwiftUI
 
 /// A premium, non-intrusive notification component for displaying status messages.
@@ -47,3 +48,4 @@ public struct Toast: Identifiable, Sendable {
         self.config = config
     }
 }
+#endif
