@@ -24,7 +24,6 @@ let package = Package(
             path: "Sources/ToastKit"),
         .testTarget(
             name: "ToastKitTests",
-            dependencies: ["ToastKit"],
-            path: "Tests/ToastKitTests"),
+            dependencies: ["ToastKit"]),
     ]
 )
