@@ -19,12 +19,24 @@ public struct ToastConfiguration: Sendable {
     public let duration: Double
     /// If true, the user can dismiss the toast by tapping it.
     public let isDismissible: Bool
-    
+    /// Corner radius of the toast pill shape.
+    public let cornerRadius: CGFloat
+    /// If true, a style-matched SF Symbol icon is shown alongside the message.
+    public let showIcon: Bool
+
     /// Creates a new toast configuration.
-    public init(position: Position = .top, duration: Double = 3.0, isDismissible: Bool = true) {
+    public init(
+        position: Position = .top,
+        duration: Double = 3.0,
+        isDismissible: Bool = true,
+        cornerRadius: CGFloat = 20,
+        showIcon: Bool = true
+    ) {
         self.position = position
         self.duration = duration
         self.isDismissible = isDismissible
+        self.cornerRadius = cornerRadius
+        self.showIcon = showIcon
     }
     
     /// The standard ErsanQ toast configuration.
